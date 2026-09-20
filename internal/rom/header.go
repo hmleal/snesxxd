@@ -47,22 +47,6 @@ func NewSNESHeader(data []byte) (SNESHeader, error) {
 	return snesHeader, nil
 }
 
-func developerName(id byte) string {
-	var developers = map[byte]string{
-		0x01: "Nintendo",
-		0x08: "Capcom",
-		0x13: "Electronic Arts",
-		0x18: "Hudson Soft",
-		0x33: "Ocean",
-	}
-
-	if name, ok := developers[id]; ok {
-		return fmt.Sprintf("%s 0x%02X", name, id)
-	}
-
-	return fmt.Sprintf("Unknown developer 0x%02X", id)
-}
-
 func DetectHeaderOffset(data []byte) (int, error) {
 	if len(data) < 32 {
 		return 0, fmt.Errorf("header too small: got %d bytes, need 32", len(data))
@@ -88,6 +72,52 @@ func DetectHeaderOffset(data []byte) (int, error) {
 	}
 
 	return 0, fmt.Errorf("SNES header not found")
+}
+
+func developerName(id byte) string {
+	var developers = map[byte]string{
+		0x01: "Nintendo",
+		0x08: "Capcom",
+		0x13: "Electronic Arts",
+		0x18: "Hudson Soft",
+		0x33: "Ocean",
+	}
+
+	if name, ok := developers[id]; ok {
+		return fmt.Sprintf("%s (0x%02X)", name, id)
+	}
+
+	return fmt.Sprintf("Unknown developer (0x%02X)", id)
+}
+
+func regionName(id byte) string {
+	var regions = map[byte]string{
+		0x00: "Japan",
+		0x01: "USA",
+	}
+
+	if name, ok := regions[id]; ok {
+		return fmt.Sprintf("(0x%02X) %s", id, name)
+	}
+
+	return fmt.Sprintf("Unknown region (0x%02X)", id)
+	// 00 = Japan
+	// 01 = USA
+	// 02 = Europe
+	// 03 = Sweden
+	// 04 = Finland
+	// 05 = Denmark
+	// 06 = France
+	// 07 = Netherlands
+	// 08 = Spain
+	// 09 = Germany
+	// 0A = Italy
+	// 0B = China
+	// 0C = Korea
+	// 0D = Canada
+	// 0E = Brazil
+	// 0F = Australia
+	// 10 = Other
 }
 
 func isValidHeader(header []byte) bool {

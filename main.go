@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"os"
-	"snesxxd/internal/rom"
 	"unicode"
+
+	"snesxxd/internal/rom"
 
 	"github.com/urfave/cli/v3"
 )
@@ -81,12 +83,12 @@ func printData(h rom.SNESHeader) {
 	fmt.Printf("%-*s : %s\n", labelWidth, "Developer", h.DeveloperName)
 	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "Map Mode", h.MapMode)
 	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "ROM Type", h.ROMType)
-	fmt.Printf("%-*s : %d\n", labelWidth, "ROM Size Exponent", h.ROMSize)
-	fmt.Printf("%-*s : %d\n", labelWidth, "RAM Size Exponent", h.RAMSize)
+	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "ROM Size Exponent", h.ROMSize)
+	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "RAM Size Exponent", h.RAMSize)
 	fmt.Printf("%-*s : %d\n", labelWidth, "Region", h.Region)
 	fmt.Printf("%-*s : 0x%04X\n", labelWidth, "Checksum", h.Checksum)
 	fmt.Printf("%-*s : 0x%04X\n", labelWidth, "Checksum Complement", h.ChecksumComp)
-	// fmt.Printf("%-*s : %d\n", labelWidth, "Raw (Debug)", h.Raw)
+	fmt.Printf("%-*s : %d\n", labelWidth, "Raw (Debug)", h.Raw)
 	fmt.Println("")
 }
 
@@ -113,7 +115,39 @@ func runInfo(filename string) error {
 }
 
 func runHexDump(filename string) error {
-	return fmt.Errorf("runHexDump: NotImplementedError")
+	file, err := os.Open(filename)
+	if err != nil {
+		return fmt.Errorf("runHexDump: %w", err)
+	}
+
+	buffer := make([]byte, 16)
+	offset := 0
+
+	for {
+		bytesRead, err := file.Read(buffer)
+
+		if bytesRead > 0 {
+			fmt.Printf("%08x: ", offset)
+			for i := range bytesRead {
+				fmt.Printf("%s", getColoredCode(buffer[i]))
+				if i%2 == 1 {
+					fmt.Printf(" ")
+				}
+			}
+			fmt.Println()
+			offset += bytesRead
+		}
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return fmt.Errorf("runHexDump: %w", err)
+		}
+	}
+
+	return nil
 }
 
 func main() {
@@ -141,6 +175,13 @@ func main() {
 				Usage: "Display a hexadecimal dump of the ROM",
 				Arguments: []cli.Argument{
 					&cli.StringArg{Name: "filename", Required: true},
+				},
+				Flags: []cli.Flag{
+					&cli.IntFlag{
+						Name:  "offset",
+						Value: 0,
+						Usage: "starting byte offset for reading the ROM",
+					},
 				},
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					if err := runHexDump(cmd.StringArg("filename")); err != nil {
