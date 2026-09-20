@@ -114,17 +114,16 @@ func runInfo(filename string) error {
 	return nil
 }
 
-func runHexDump(filename string) error {
+func runHexDump(filename string, offset int) error {
 	file, err := os.Open(filename)
 	if err != nil {
 		return fmt.Errorf("runHexDump: %w", err)
 	}
 
 	buffer := make([]byte, 16)
-	offset := 0
 
 	for {
-		bytesRead, err := file.Read(buffer)
+		bytesRead, err := file.ReadAt(buffer, int64(offset))
 
 		if bytesRead > 0 {
 			fmt.Printf("%08x: ", offset)
@@ -184,7 +183,8 @@ func main() {
 					},
 				},
 				Action: func(ctx context.Context, cmd *cli.Command) error {
-					if err := runHexDump(cmd.StringArg("filename")); err != nil {
+					offset := cmd.Int("offset")
+					if err := runHexDump(cmd.StringArg("filename"), offset); err != nil {
 						return err
 					}
 
