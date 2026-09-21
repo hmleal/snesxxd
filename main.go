@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"os"
 	"unicode"
 
@@ -80,15 +81,15 @@ func printData(h rom.SNESHeader) {
 	// fmt.Printf("%-*s : %s\n", labelWidth, "Filename", filename)
 	// fmt.Printf("%-*s : %d bytes\n", labelWidth, "Filesize", fileInfo.Size())
 	fmt.Printf("%-*s : %s\n", labelWidth, "Title", h.Title)
-	fmt.Printf("%-*s : %s\n", labelWidth, "Developer", h.DeveloperName)
+	fmt.Printf("%-*s : %s\n", labelWidth, "Developer", h.DeveloperName())
 	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "Map Mode", h.MapMode)
 	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "ROM Type", h.ROMType)
-	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "ROM Size Exponent", h.ROMSize)
+	fmt.Printf("%-*s : 0x%02X %dKB\n", labelWidth, "ROM Size Exponent", h.ROMSize, int(math.Pow(2, float64(h.ROMSize))))
 	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "RAM Size Exponent", h.RAMSize)
-	fmt.Printf("%-*s : %d\n", labelWidth, "Region", h.Region)
+	fmt.Printf("%-*s : %s\n", labelWidth, "Region", h.RegionName())
 	fmt.Printf("%-*s : 0x%04X\n", labelWidth, "Checksum", h.Checksum)
 	fmt.Printf("%-*s : 0x%04X\n", labelWidth, "Checksum Complement", h.ChecksumComp)
-	fmt.Printf("%-*s : %d\n", labelWidth, "Raw (Debug)", h.Raw)
+	// fmt.Printf("%-*s : %d\n", labelWidth, "Raw (Debug)", h.Raw)
 	fmt.Println("")
 }
 

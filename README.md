@@ -17,10 +17,10 @@ snesxxd info Aladdin.sfc
 File
 -------------------------------------------------------------
 Title               : ALADDIN
-Developer           : Capcom (0x08)
+Developer           : 0x08 Capcom
 Map Mode            : 0x30
 ROM Type            : 0x00
-ROM Size Exponent   : 0x0B
+ROM Size Exponent   : 0x0B 2048KB
 RAM Size Exponent   : 0x00
 Region              : 1
 Checksum            : 0x060A
