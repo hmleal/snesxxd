@@ -83,13 +83,14 @@ func printData(h rom.SNESHeader) {
 	fmt.Printf("%-*s : %s\n", labelWidth, "Title", h.Title)
 	fmt.Printf("%-*s : %s\n", labelWidth, "Developer", h.DeveloperName())
 	fmt.Printf("%-*s : 0x%02X %s\n", labelWidth, "Map Mode", h.MapMode.Raw, h.MapMode)
-	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "ROM Type", h.ROMType)
+	fmt.Printf("%-*s : %s\n", labelWidth, "ROM Type", h.ROMTypeInfo())
 	fmt.Printf("%-*s : 0x%02X %dKB\n", labelWidth, "ROM Size Exponent", h.ROMSize, int(math.Pow(2, float64(h.ROMSize))))
 	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "RAM Size Exponent", h.RAMSize)
 	fmt.Printf("%-*s : %s\n", labelWidth, "Region", h.RegionName())
 	fmt.Printf("%-*s : 0x%04X\n", labelWidth, "Checksum", h.Checksum)
 	fmt.Printf("%-*s : 0x%04X\n", labelWidth, "Checksum Complement", h.ChecksumComp)
-	// fmt.Printf("%-*s : %d\n", labelWidth, "Raw (Debug)", h.Raw)
+	fmt.Println("")
+	fmt.Printf("%-*s : %d\n", labelWidth, "Raw (Debug)", h.Raw)
 	fmt.Println("")
 }
 
@@ -109,7 +110,7 @@ func runInfo(filename string) error {
 		return fmt.Errorf("runInfo: %w", err)
 	}
 
-	printHeader("File")
+	printHeader(fmt.Sprintf("Header (0x%04X)", offset))
 	printData(header)
 
 	return nil

@@ -111,6 +111,19 @@ func NewSNESHeader(data []byte) (SNESHeader, error) {
 	return snesHeader, nil
 }
 
+func (h *SNESHeader) ROMTypeInfo() string {
+	switch h.ROMType {
+	case 0x00:
+		return fmt.Sprintf("0x%02X %s", h.ROMType, "ROM only")
+	case 0x01:
+		return fmt.Sprintf("0x%02X %s", h.ROMType, "ROM + RAM")
+	case 0x02:
+		return fmt.Sprintf("0x%02X %s", h.ROMType, "ROM + RAM + Battery")
+	default:
+		return fmt.Sprintf("0x%02X %s", h.ROMType, "Unknown")
+	}
+}
+
 // DeveloperName returns the developer identifier and name from the header.
 func (h *SNESHeader) DeveloperName() string {
 	if name, ok := developerNames[h.DeveloperId]; ok {

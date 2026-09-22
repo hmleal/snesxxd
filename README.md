@@ -14,17 +14,19 @@ filename with a ROM file you are authorized to inspect.
 ```
 snesxxd info Aladdin.sfc
 
-File
+Header (0x7FC0)
 -------------------------------------------------------------
-Title               : ALADDIN
+Title               : GOOF TROOP
 Developer           : 0x08 Capcom
-Map Mode            : 0x30
-ROM Type            : 0x00
-ROM Size Exponent   : 0x0B 2048KB
+Map Mode            : 0x30 LoROM - Fast (3.58 MHz)
+ROM Type            : 0x00 ROM only
+ROM Size Exponent   : 0x09 512KB
 RAM Size Exponent   : 0x00
-Region              : 1
-Checksum            : 0x060A
-Checksum Complement : 0xF9F5
+Region              : 0x01 USA
+Checksum            : 0x5AD0
+Checksum Complement : 0xA52F
+
+Raw (Debug)         : [71 79 79 70 32 84 82 79 79 80 32 32 32 32 32 32 32 32 32 32 32 48 0 9 0 1 8 0 47 165 208 90]
 ```
 
 ### Hexadecimal dump
