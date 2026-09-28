@@ -75,6 +75,17 @@ func getColoredCode(b byte, useColor bool) string {
 	}
 }
 
+// getAsciiRep returns the printable ASCII character represented by b,
+// or "." if b is not printable.
+func getAsciiRep(b byte) string {
+	switch {
+	case isPrintableASCII(b):
+		return fmt.Sprintf("%s", string(b))
+	default:
+		return "."
+	}
+}
+
 // TUI -  Terminal User Interface
 func printHeader(title string) {
 	fmt.Println("")
@@ -133,17 +144,19 @@ func runHexDump(filename string, offset int, useColor bool) error {
 
 	for {
 		bytesRead, err := file.ReadAt(buffer, int64(offset))
-
+		ascii := ""
 		if bytesRead > 0 {
 			fmt.Printf("%08x: ", offset)
 			for i := range bytesRead {
+				ascii = fmt.Sprintf("%s%s", ascii, getAsciiRep(buffer[i]))
 				fmt.Printf("%s", getColoredCode(buffer[i], useColor))
 				if i%2 == 1 {
 					fmt.Printf(" ")
 				}
 			}
-			fmt.Println()
+			fmt.Println(ascii)
 			offset += bytesRead
+			ascii = "" // don't forget to flush
 		}
 
 		if err == io.EOF {
