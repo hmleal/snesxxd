@@ -34,11 +34,15 @@ Raw (Debug)         : [71 79 79 70 32 84 82 79 79 80 32 32 32 32 32 32 32 32 32 
 ```
 snesxxd hex Aladdin.sfc
 snesxxd hex --offset 1024 Aladdin.sfc
+snesxxd hex --no-color Aladdin.sfc
 
 00000000: 7818 fb5c 0780 809c 0042 9c0b 429c 0c42
 00000010: a98f 8d00 219c 0a00 a901 8d0d 42a2 0de0
 00000020: 01f0 069e 0042 ca10 f6a9 ff8d 0142 c210
 ```
+
+The dump is colorized by byte class. Pass `--no-color` to emit plain text, for
+example when redirecting to a file or piping into another program.
 
 ## Disclaimer
 

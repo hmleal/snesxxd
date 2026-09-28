@@ -53,7 +53,14 @@ func isPrintableUnicode(b byte) bool {
 }
 
 // getColoredCode returns the hexadecimal value of b with a color based on its class.
-func getColoredCode(b byte) string {
+//
+// When useColor is false the escape sequences are omitted and the plain
+// hexadecimal value is returned instead.
+func getColoredCode(b byte, useColor bool) string {
+	if !useColor {
+		return fmt.Sprintf("%02x", b)
+	}
+
 	switch {
 	case isPrintableASCII(b):
 		return fmt.Sprintf("%s%02x%s", Green, b, Reset)
@@ -116,7 +123,7 @@ func runInfo(filename string) error {
 	return nil
 }
 
-func runHexDump(filename string, offset int) error {
+func runHexDump(filename string, offset int, useColor bool) error {
 	file, err := os.Open(filename)
 	if err != nil {
 		return fmt.Errorf("runHexDump: %w", err)
@@ -130,7 +137,7 @@ func runHexDump(filename string, offset int) error {
 		if bytesRead > 0 {
 			fmt.Printf("%08x: ", offset)
 			for i := range bytesRead {
-				fmt.Printf("%s", getColoredCode(buffer[i]))
+				fmt.Printf("%s", getColoredCode(buffer[i], useColor))
 				if i%2 == 1 {
 					fmt.Printf(" ")
 				}
@@ -183,10 +190,15 @@ func main() {
 						Value: 0,
 						Usage: "starting byte offset for reading the ROM",
 					},
+					&cli.BoolWithInverseFlag{
+						Name:  "color",
+						Value: true,
+						Usage: "colorize the dump; use --no-color to disable ANSI escape sequences",
+					},
 				},
 				Action: func(ctx context.Context, cmd *cli.Command) error {
 					offset := cmd.Int("offset")
-					if err := runHexDump(cmd.StringArg("filename"), offset); err != nil {
+					if err := runHexDump(cmd.StringArg("filename"), offset, cmd.Bool("color")); err != nil {
 						return err
 					}
 
