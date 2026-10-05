@@ -71,8 +71,8 @@ type SNESHeader struct {
 	ROMType      byte
 	ROMSize      byte
 	RAMSize      byte
-	RegionId     byte
-	DeveloperId  byte
+	RegionID     byte
+	DeveloperID  byte
 	Version      byte
 	ChecksumComp uint16
 	Checksum     uint16
@@ -101,8 +101,8 @@ func NewSNESHeader(data []byte) (SNESHeader, error) {
 		ROMType:      data[0x16],
 		ROMSize:      data[0x17],
 		RAMSize:      data[0x18],
-		RegionId:     data[0x19],
-		DeveloperId:  data[0x1A],
+		RegionID:     data[0x19],
+		DeveloperID:  data[0x1A],
 		Version:      data[0x1B],
 		Checksum:     binary.LittleEndian.Uint16(data[0x1E:0x20]),
 		ChecksumComp: binary.LittleEndian.Uint16(data[0x1C:0x1E]),
@@ -126,16 +126,16 @@ func (h *SNESHeader) ROMTypeInfo() string {
 
 // DeveloperName returns the developer identifier and name from the header.
 func (h *SNESHeader) DeveloperName() string {
-	if name, ok := developerNames[h.DeveloperId]; ok {
-		return fmt.Sprintf("0x%02X %s", h.DeveloperId, name)
+	if name, ok := developerNames[h.DeveloperID]; ok {
+		return fmt.Sprintf("0x%02X %s", h.DeveloperID, name)
 	}
 
-	return fmt.Sprintf("0x%02X Unknown developer", h.DeveloperId)
+	return fmt.Sprintf("0x%02X Unknown developer", h.DeveloperID)
 }
 
 // RegionName returns the region identifier and name from the header.
 func (h *SNESHeader) RegionName() string {
-	var regions = map[byte]string{
+	regions := map[byte]string{
 		0x00: "Japan",
 		0x01: "USA",
 		0x02: "Europe",
@@ -155,11 +155,11 @@ func (h *SNESHeader) RegionName() string {
 		0x10: "Other",
 	}
 
-	if name, ok := regions[h.RegionId]; ok {
-		return fmt.Sprintf("0x%02X %s", h.RegionId, name)
+	if name, ok := regions[h.RegionID]; ok {
+		return fmt.Sprintf("0x%02X %s", h.RegionID, name)
 	}
 
-	return fmt.Sprintf("Unknown region 0x%02X", h.RegionId)
+	return fmt.Sprintf("Unknown region 0x%02X", h.RegionID)
 }
 
 // DetectHeaderOffset finds the offset of a valid SNES ROM header in data.
@@ -190,7 +190,6 @@ func DetectHeaderOffset(data []byte) (int, error) {
 	}
 
 	return 0, fmt.Errorf("SNES header not found")
-
 }
 
 // isValidHeader reports whether a 32-byte header uses a supported map mode.

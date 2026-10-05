@@ -7,7 +7,6 @@ import (
 	"log"
 	"math"
 	"os"
-	"unicode"
 
 	"snesxxd/internal/rom"
 
@@ -47,11 +46,6 @@ func isMaxByteValue(b byte) bool {
 	return b == 0xFF
 }
 
-// isPrintableUnicode reports whether b is a printable Unicode rune.
-func isPrintableUnicode(b byte) bool {
-	return unicode.IsPrint(rune(b))
-}
-
 // getColoredCode returns the hexadecimal value of b with a color based on its class.
 //
 // When useColor is false the escape sequences are omitted and the plain
@@ -77,10 +71,10 @@ func getColoredCode(b byte, useColor bool) string {
 
 // getAsciiRep returns the printable ASCII character represented by b,
 // or "." if b is not printable.
-func getAsciiRep(b byte) string {
+func getASCIIRep(b byte) string {
 	switch {
 	case isPrintableASCII(b):
-		return fmt.Sprintf("%s", string(b))
+		return string(b)
 	default:
 		return "."
 	}
@@ -148,7 +142,7 @@ func runHexDump(filename string, offset int, useColor bool) error {
 		if bytesRead > 0 {
 			fmt.Printf("%08x: ", offset)
 			for i := range bytesRead {
-				ascii = fmt.Sprintf("%s%s", ascii, getAsciiRep(buffer[i]))
+				ascii = fmt.Sprintf("%s%s", ascii, getASCIIRep(buffer[i]))
 				fmt.Printf("%s", getColoredCode(buffer[i], useColor))
 				if i%2 == 1 {
 					fmt.Printf(" ")

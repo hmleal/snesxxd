@@ -76,7 +76,7 @@ func TestDeveloperName(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			header := SNESHeader{DeveloperId: test.id}
+			header := SNESHeader{DeveloperID: test.id}
 			if got := header.DeveloperName(); got != test.want {
 				t.Errorf("DeveloperName() = %q, want %q", got, test.want)
 			}
