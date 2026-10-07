@@ -8,8 +8,6 @@ import (
 	"math"
 	"os"
 
-	"snesxxd/internal/rom"
-
 	"github.com/urfave/cli/v3"
 )
 
@@ -87,7 +85,7 @@ func printHeader(title string) {
 	fmt.Println("-------------------------------------------------------------")
 }
 
-func printData(h rom.SNESHeader) {
+func printData(h SNESHeader) {
 	const labelWidth = 19
 
 	// fmt.Printf("%-*s : %s\n", labelWidth, "Filename", filename)
@@ -112,12 +110,12 @@ func runInfo(filename string) error {
 		return fmt.Errorf("runInfo: %q - %w", filename, err)
 	}
 
-	offset, err := rom.DetectHeaderOffset(data)
+	offset, err := DetectHeaderOffset(data)
 	if err != nil {
 		return fmt.Errorf("runInfo: %w", err)
 	}
 
-	header, err := rom.NewSNESHeader(data[offset : offset+32])
+	header, err := NewSNESHeader(data[offset : offset+32])
 	if err != nil {
 		return fmt.Errorf("runInfo: %w", err)
 	}

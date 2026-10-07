@@ -1,4 +1,4 @@
-package rom
+package main
 
 import "testing"
 
