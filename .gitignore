@@ -1,0 +1,14 @@
+# Binaries and build folders
+*.exe
+*.exe~
+*.dll
+*.so
+
+dist/
+
+# Test binary, build with `go test -c`
+*.test
+
+# Editor/IDE
+.vscode/
+.zed/
