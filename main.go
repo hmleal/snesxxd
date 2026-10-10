@@ -97,6 +97,7 @@ func printData(h SNESHeader) {
 	fmt.Printf("%-*s : 0x%02X %dKB\n", labelWidth, "ROM Size Exponent", h.ROMSize, int(math.Pow(2, float64(h.ROMSize))))
 	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "RAM Size Exponent", h.RAMSize)
 	fmt.Printf("%-*s : %s\n", labelWidth, "Region", h.RegionName())
+	fmt.Printf("%-*s : 0x%02X\n", labelWidth, "Version", h.Version)
 	fmt.Printf("%-*s : 0x%04X\n", labelWidth, "Checksum", h.Checksum)
 	fmt.Printf("%-*s : 0x%04X\n", labelWidth, "Checksum Complement", h.ChecksumComp)
 	fmt.Println("")
@@ -131,6 +132,8 @@ func runHexDump(filename string, offset int, useColor bool) error {
 	if err != nil {
 		return fmt.Errorf("runHexDump: %w", err)
 	}
+
+	defer file.Close()
 
 	buffer := make([]byte, 16)
 
