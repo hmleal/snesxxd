@@ -170,7 +170,7 @@ func main() {
 	cmd := &cli.Command{
 		Name:    "snesxxd",
 		Usage:   "A terminal-based SNES ROM inspector written in Go",
-		Version: "0.0.1",
+		Version: "0.1.0",
 		Commands: []*cli.Command{
 			{
 				Name:  "info",
